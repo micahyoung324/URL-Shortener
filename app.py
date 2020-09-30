@@ -62,5 +62,13 @@ def home():
 def display_short_url(url):
     return render_template("shorturl.html", short_url_display=url)
 
+@app.route("/<short_url>")
+def redirection(short_url):
+    long_url = Urls.query.filter_by(short=short_url).first()
+    if long_url:
+        return redirect(long_url.long)
+    else:
+        return f"<h1>URL doesn't exist</h1>"
+
 if __name__ == "__main__":
     app.run(port = 5000, debug = True)
