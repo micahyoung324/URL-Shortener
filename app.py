@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import string
 import random
@@ -44,7 +44,7 @@ def home():
 
         if found_url:
             # URL found so just turn short URL
-            return redirect(url_for("display_short_url", url = found_url.short))
+            return redirect(url_for("display_short_url", url=found_url.short))
 
         else:
             # URL not found so we need to create a short URL
@@ -52,7 +52,7 @@ def home():
             new_url = Urls(url_received, short_url)
             db.session.add(new_url)
             db.session.commit()
-            return short_url
+            return redirect(url_for("display_short_url", url=short_url))
 
         return url_received
     else:
