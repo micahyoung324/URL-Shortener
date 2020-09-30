@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+import string
+import random
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///urls.db"
@@ -15,6 +17,18 @@ class Urls(db.Model):
     def __init__(self, long, short):
         self.long = long
         self.short = short
+
+def shorten_url():
+    letters = string.ascii_letters
+
+    while True:
+        random_letters = random.choices(letters, k = 4)
+        random_letters = "".join(random_letters)
+
+        short_url = Urls.query.filter_by(short=random_letters).first()
+
+        if not short_url:
+            return random_letters
 
 @app.before_first_request
 def create_tables():
